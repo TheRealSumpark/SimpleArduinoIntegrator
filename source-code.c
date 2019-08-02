@@ -101,9 +101,7 @@ int main(void)
     Symbol* Symbols_List;
     Symbols_List=(Symbol*)malloc(sizeof(Symbol));
     Symbols_List=DefiningSymbols(Symbols_List);
-    //char  Tagslist  [7] [MAX_PATH];
-
-
+   
     /******************************/
     int NmbTagsInFamily[8]={1,1,1,1,1,1,1,1};
     Tag *PPCT;
@@ -138,13 +136,6 @@ int main(void)
     MLCT=malloc(sizeof(Tag));
     strcpy(MLCT[0].T,"//ml");
     /******************************/
-
-
-
-
-
-
-
 
     FILE *f;
 
@@ -324,14 +315,7 @@ int main(void)
 
             }printf("\n%d\n",NmbTagsInFamily[7]);
              /**********************************************/
-                      /*  i=0;
-                       while (fscanf(f,"%s\n",Buf)!=EOF)
-                        {
-                            strcpy(Tagslist[i],Buf);
-                            i++;
-                        }*/
-
-
+                   
                         printf("Using Custom Tags\n");
                         memset(cwd,'\0',sizeof(char)*strlen(cwd));
                         if (getcwd(cwd, sizeof(cwd)) == NULL)
@@ -360,14 +344,7 @@ int main(void)
 
                         GeneratingProjectFile(Symbols_List,Temp,cwd);
                         DeleteTemp(Temp);
-
-
-
-
-
-
-
-                        }
+   }
 
  }
 
