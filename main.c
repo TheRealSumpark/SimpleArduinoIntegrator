@@ -96,7 +96,7 @@ int main(void)
     char Temp[PATH_MAX];
     char BasePath[PATH_MAX];
     char Output_File[PATH_MAX];
-   // char Buf[PATH_MAX];
+    char Buf[PATH_MAX];
     char Path[PATH_MAX];
     Symbol* Symbols_List;
     Symbols_List=(Symbol*)malloc(sizeof(Symbol));
@@ -146,7 +146,7 @@ int main(void)
 
 
 
-//    FILE *f;
+    FILE *f;
 
     Interface();
     switch(menu (&CustomTags))
@@ -273,7 +273,7 @@ int main(void)
             for (i=0;i<NmbTagsInFamily[3];i++)
             {   printf("%s\n",GVDCT[i].T);
 
-            }
+            }printf("\n%d\n",NmbTagsInFamily[3]);
             /***************************************************/
             printf("\n");
              memset(Path,'\0',sizeof(char)*MAX_PATH);
@@ -285,7 +285,7 @@ int main(void)
             for (i=0;i<NmbTagsInFamily[4];i++)
             {   printf("%s\n",OBINITCT[i].T);
 
-            }
+            }printf("\n%d\n",NmbTagsInFamily[4]);
             /***************************************************/
             printf("\n");
              memset(Path,'\0',sizeof(char)*MAX_PATH);
@@ -310,7 +310,7 @@ int main(void)
             for (i=0;i<NmbTagsInFamily[6];i++)
             {   printf("%s\n",SETCT[i].T);
 
-            }
+            }printf("\n%d\n",NmbTagsInFamily[6]);
              /**********************************************/
                 printf("\n");
               memset(Path,'\0',sizeof(char)*MAX_PATH);
@@ -322,7 +322,7 @@ int main(void)
             for (i=0;i<NmbTagsInFamily[7];i++)
             {   printf("%s\n",MLCT[i].T);
 
-            }
+            }printf("\n%d\n",NmbTagsInFamily[7]);
              /**********************************************/
                       /*  i=0;
                        while (fscanf(f,"%s\n",Buf)!=EOF)
@@ -342,7 +342,7 @@ int main(void)
                         InitSetupFile(Temp);
                         Init_MainLoopFile(Temp);
 
-                        ParsingProjectFilesCustomTags(Path,Temp,NmbTagsInFamily,PPCT ,LIBCT,PINCT,GVDCT,OBINITCT,TMVCT,SETCT,MLCT);
+                        ParsingProjectFilesCustomTags(BasePath,Temp,NmbTagsInFamily,PPCT ,LIBCT ,PINCT,GVDCT,OBINITCT,TMVCT,SETCT,MLCT);
                         AddEndBracketToFile(Temp);
                         printf("\nEnter output file  name \n");
                         fflush(stdin);
@@ -1355,16 +1355,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(PPCT[j].T)]='\0';
-                                                   printf("%s  %s\n",Buf,PPCT[j].T);
+                                                   printf("%sl%s\n",Buf,PPCT[j].T);
                                                     if (strcmp(Buf,PPCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy&& c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(PPCT[j].T)+1));
                                                                 for (i=0;i<strlen(PPCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1372,7 +1373,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,PPCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),PP);c=fgetc(f);}}
@@ -1380,8 +1381,8 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(PPCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass PP\n");
 
 
                                        //***********************************************************************************//
@@ -1396,15 +1397,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(LIBCT[j].T)]='\0';
-                                                    if (strcmp(Buf,LIBCT[j].T)==0)
+                                                   printf("%sl%s\n",Buf,LIBCT[j].T);
+                                                    if (strcmp(Buf,PPCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy&& c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(LIBCT[j].T)+1));
                                                                 for (i=0;i<strlen(LIBCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1412,7 +1415,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,LIBCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),Lib);c=fgetc(f);}}
@@ -1420,11 +1423,10 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(LIBCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
-
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass LIB\n");
                               //******************************************************************************************//
-                                                    for (j=0;j<NmbTagsInFamily[2];j++)
+                                                   for (j=0;j<NmbTagsInFamily[2];j++)
                                             {       memset(Buf,'\0',sizeof(char)*(strlen(PINCT[j].T)+1));
                                                     fseek(f,0,SEEK_CUR);
                                                     Pos=ftell(f);
@@ -1435,15 +1437,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(PINCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,PINCT[j].T);
                                                     if (strcmp(Buf,PINCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy&& c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(PINCT[j].T)+1));
                                                                 for (i=0;i<strlen(PINCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1451,7 +1455,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,PINCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),Pins);c=fgetc(f);}}
@@ -1459,8 +1463,8 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(PINCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("PassPIN\n");
 
                                 //***********************************************************************************//
 
@@ -1475,15 +1479,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(GVDCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,GVDCT[j].T);
                                                     if (strcmp(Buf,GVDCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy&& c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(GVDCT[j].T)+1));
                                                                 for (i=0;i<strlen(GVDCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1491,7 +1497,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,GVDCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),GVD);c=fgetc(f);}}
@@ -1499,12 +1505,11 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(GVDCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
-
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass GVD\n");
 
                                          //******************************************************************************************//
-                                                     for (j=0;j<NmbTagsInFamily[4];j++)
+                                                    for (j=0;j<NmbTagsInFamily[4];j++)
                                             {       memset(Buf,'\0',sizeof(char)*(strlen(OBINITCT[j].T)+1));
                                                     fseek(f,0,SEEK_CUR);
                                                     Pos=ftell(f);
@@ -1515,15 +1520,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(OBINITCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,OBINITCT[j].T);
                                                     if (strcmp(Buf,OBINITCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy&& c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(OBINITCT[j].T)+1));
                                                                 for (i=0;i<strlen(OBINITCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1531,7 +1538,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,OBINITCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),ObInit);c=fgetc(f);}}
@@ -1539,13 +1546,11 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(OBINITCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
-
-
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass OBINIT\n");
                                 //***********************************************************************************//
 
-                                                 for (j=0;j<NmbTagsInFamily[5];j++)
+                                                for (j=0;j<NmbTagsInFamily[5];j++)
                                             {       memset(Buf,'\0',sizeof(char)*(strlen(TMVCT[j].T)+1));
                                                     fseek(f,0,SEEK_CUR);
                                                     Pos=ftell(f);
@@ -1556,15 +1561,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(TMVCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,TMVCT[j].T);
                                                     if (strcmp(Buf,TMVCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy && c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(TMVCT[j].T)+1));
                                                                 for (i=0;i<strlen(TMVCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1572,7 +1579,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,TMVCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),TMV);c=fgetc(f);}}
@@ -1580,9 +1587,8 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(TMVCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
-
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass TMV\n");
 
                                                 //***********************************************************************************//
 
@@ -1597,15 +1603,17 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(SETCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,SETCT[j].T);
                                                     if (strcmp(Buf,SETCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy && c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(SETCT[j].T)+1));
                                                                 for (i=0;i<strlen(SETCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
@@ -1613,7 +1621,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                                 if (strcmp(Buf,SETCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),Set);c=fgetc(f);}}
@@ -1621,14 +1629,14 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                               else {fseek(f,-(strlen(SETCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);}
-                                               }
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }printf("Pass SET\n");
 
 
 
                                                  //***********************************************************************************//
 
-                                                for (j=0;j<NmbTagsInFamily[7];j++)
+                                              for (j=0;j<NmbTagsInFamily[7];j++)
                                             {       memset(Buf,'\0',sizeof(char)*(strlen(MLCT[j].T)+1));
                                                     fseek(f,0,SEEK_CUR);
                                                     Pos=ftell(f);
@@ -1639,23 +1647,25 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
                                                   c=fgetc(f);
                                                     }
                                                     Buf[strlen(MLCT[j].T)]='\0';
+                                                   printf("%sl%s\n",Buf,MLCT[j].T);
                                                     if (strcmp(Buf,MLCT[j].T)==0)
                                                     {   cpy=1;
                                                         fseek(f,0,SEEK_CUR);
 
-                                                        while (cpy)
+                                                        while (cpy && c!=EOF)
                                                         {
                                                             if (c=='/')
                                                                     {  fseek(f,0,SEEK_CUR);
                                                                     Pos=ftell(f);
-                                                                for (i=0;i<strlen(MLCT[j].T);i++)
+                                                                    memset(Buf,'\0',sizeof(char)*(strlen(MLCT[j].T)+1));
+                                                                for (i=0;i<strlen(MLCT[j].T) ;i++)
                                                                     { Buf[i]=c;
                                                                         c=fgetc(f);}
 
 
                                                                 if (strcmp(Buf,MLCT[j].T)==0)
                                                                     {   cpy=0;
-                                                                    fseek(f,0,SEEK_CUR);
+                                                                    //fseek(f,0,SEEK_CUR);
                                                                     }
                                                                 else {fseek(f,Pos-1,SEEK_SET);
                                                                     fputc(c=fgetc(f),ML);c=fgetc(f);}}
@@ -1663,13 +1673,8 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
 
                                                         }
                                                        }
-                                                    else if (j<NmbTagsInFamily[7])
-                                                    {
-                                                        fseek(f,-(strlen(MLCT[j].T)+1),SEEK_CUR);c=fgetc(f); fseek(f,Pos,SEEK_SET);
-                                                    }
-                                               else {fseek(f,Pos,SEEK_SET);}
-                                               }
-
+                                               else {fseek(f,Pos-1,SEEK_SET);c=fgetc(f);}
+                                               }        printf("Pass ML\n");
 
 
                                                  //***********************************************************************************//
@@ -1694,6 +1699,7 @@ int SortingFilesCustomTags(char *Path,char * Temp,int NmbTagsInFamily[],Tag *PPC
     return 0;
 
 }
+
 void RemoveExistingFile(char * FilePath)
 {
     FILE *f;
